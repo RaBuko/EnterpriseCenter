@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace EnterpriseCenter
+namespace EnterpriseCenterApp
 {
     public class Program
     {

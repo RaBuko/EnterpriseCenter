@@ -1,0 +1,1 @@
+dotnet ef dbcontext scaffold Name=ConnectionStrings.EnterpriseCenterDatabase Npgsql.EntityFrameworkCore.PostgreSQL -o Model -c EnterpriseCenterContext -f
