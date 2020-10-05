@@ -1,159 +1,96 @@
-﻿using System;
+﻿using EnterpriseCenterApp.Model;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using EnterpriseCenterApp.Model;
 
 namespace EnterpriseCenterApp.Controllers
 {
     public class CustomersController : Controller
     {
-        private readonly EnterpriseCenterContext _context;
+        protected EnterpriseCenterContext EnterpriseCenterContext;
 
-        public CustomersController(EnterpriseCenterContext context)
+        public CustomersController(EnterpriseCenterContext enterpriseCenterContext)
         {
-            _context = context;
+            EnterpriseCenterContext = enterpriseCenterContext;
         }
 
-        // GET: Customers
-        public async Task<IActionResult> Index()
+        // GET: CustomersController
+        public ActionResult Index()
         {
-            var enterpriseCenterContext = _context.Customers.Include(c => c.SalesrepemployeenumberNavigation);
-            return View(await enterpriseCenterContext.ToListAsync());
-        }
-
-        // GET: Customers/Details/5
-        public async Task<IActionResult> Details(decimal? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customers = await _context.Customers
-                .Include(c => c.SalesrepemployeenumberNavigation)
-                .FirstOrDefaultAsync(m => m.Customernumber == id);
-            if (customers == null)
-            {
-                return NotFound();
-            }
-
-            return View(customers);
-        }
-
-        // GET: Customers/Create
-        public IActionResult Create()
-        {
-            ViewData["Salesrepemployeenumber"] = new SelectList(_context.Employees, "Employeenumber", "Email");
             return View();
         }
 
-        // POST: Customers/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // GET: CustomersController/Details/5
+        public ActionResult Details(decimal customerNumber)
+        {
+            var customer = EnterpriseCenterContext.Customers.FirstOrDefault(c => c.Customernumber == customerNumber);
+            return View(customer);
+        }
+
+        // GET: CustomersController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: CustomersController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Customernumber,Customername,Contactlastname,Contactfirstname,Phone,Addressline1,Addressline2,City,State,Postalcode,Country,Salesrepemployeenumber,Creditlimit")] Customers customers)
+        public ActionResult Create(IFormCollection collection)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(customers);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Salesrepemployeenumber"] = new SelectList(_context.Employees, "Employeenumber", "Email", customers.Salesrepemployeenumber);
-            return View(customers);
+            catch
+            {
+                return View();
+            }
         }
 
-        // GET: Customers/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        // GET: CustomersController/Edit/5
+        public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customers = await _context.Customers.FindAsync(id);
-            if (customers == null)
-            {
-                return NotFound();
-            }
-            ViewData["Salesrepemployeenumber"] = new SelectList(_context.Employees, "Employeenumber", "Email", customers.Salesrepemployeenumber);
-            return View(customers);
+            return View();
         }
 
-        // POST: Customers/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: CustomersController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("Customernumber,Customername,Contactlastname,Contactfirstname,Phone,Addressline1,Addressline2,City,State,Postalcode,Country,Salesrepemployeenumber,Creditlimit")] Customers customers)
+        public ActionResult Edit(int id, IFormCollection collection)
         {
-            if (id != customers.Customernumber)
+            try
             {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(customers);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!CustomersExists(customers.Customernumber))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["Salesrepemployeenumber"] = new SelectList(_context.Employees, "Employeenumber", "Email", customers.Salesrepemployeenumber);
-            return View(customers);
+            catch
+            {
+                return View();
+            }
         }
 
-        // GET: Customers/Delete/5
-        public async Task<IActionResult> Delete(decimal? id)
+        // GET: CustomersController/Delete/5
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var customers = await _context.Customers
-                .Include(c => c.SalesrepemployeenumberNavigation)
-                .FirstOrDefaultAsync(m => m.Customernumber == id);
-            if (customers == null)
-            {
-                return NotFound();
-            }
-
-            return View(customers);
+            return View();
         }
 
-        // POST: Customers/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: CustomersController/Delete/5
+        [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id)
+        public ActionResult Delete(int id, IFormCollection collection)
         {
-            var customers = await _context.Customers.FindAsync(id);
-            _context.Customers.Remove(customers);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CustomersExists(decimal id)
-        {
-            return _context.Customers.Any(e => e.Customernumber == id);
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }

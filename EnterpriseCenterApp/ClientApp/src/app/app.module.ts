@@ -8,13 +8,15 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { FindCompanyComponent } from './find-company/find-company.component';
+import { AlgorithmsComponent } from './algorithms/algorithms.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavMenuComponent,
     FindCompanyComponent,
-    HomeComponent
+    HomeComponent,
+    AlgorithmsComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -22,7 +24,8 @@ import { FindCompanyComponent } from './find-company/find-company.component';
     FormsModule,
     RouterModule.forRoot([
       { path: '', component: HomeComponent, pathMatch: 'full' },
-      { path: 'find-company', component: FindCompanyComponent }
+      { path: 'find-company', component: FindCompanyComponent },
+      { path: 'algorithms', component: AlgorithmsComponent }
     ])
   ],
   providers: [],
