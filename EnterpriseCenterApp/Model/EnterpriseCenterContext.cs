@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.Extensions.Configuration;
 
 namespace EnterpriseCenterApp.Model
 {
@@ -15,46 +16,50 @@ namespace EnterpriseCenterApp.Model
         {
         }
 
-        public virtual DbSet<Customers> Customers { get; set; }
-        public virtual DbSet<Employees> Employees { get; set; }
-        public virtual DbSet<Offices> Offices { get; set; }
-        public virtual DbSet<Orderdetails> Orderdetails { get; set; }
-        public virtual DbSet<Orders> Orders { get; set; }
-        public virtual DbSet<Payments> Payments { get; set; }
-        public virtual DbSet<Productlines> Productlines { get; set; }
-        public virtual DbSet<Products> Products { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
+        public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<Office> Offices { get; set; }
+        public virtual DbSet<OrderDetail> Orderdetails { get; set; }
+        public virtual DbSet<Order> Orders { get; set; }
+        public virtual DbSet<Payment> Payments { get; set; }
+        public virtual DbSet<ProductLine> Productlines { get; set; }
+        public virtual DbSet<Product> Products { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+                IConfigurationRoot configuration = new ConfigurationBuilder()
+                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+                .AddJsonFile("appsettings.json")
+                .Build();
                 optionsBuilder.UseNpgsql("Name=ConnectionStrings.EnterpriseCenterDatabase");
             }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Customers>(entity =>
+            modelBuilder.Entity<Customer>(entity =>
             {
-                entity.HasKey(e => e.Customernumber)
-                    .HasName("customers_pkey");
+                entity.HasKey(e => e.CustomerNumber)
+                    .HasName("customer_pkey");
 
-                entity.ToTable("customers");
+                entity.ToTable("customer");
 
-                entity.HasIndex(e => e.Salesrepemployeenumber)
-                    .HasName("salesrepemployeenumber");
+                entity.HasIndex(e => e.SalesRepEmployeeNumber)
+                    .HasName("sales_rep_employee_number");
 
-                entity.Property(e => e.Customernumber)
-                    .HasColumnName("customernumber")
+                entity.Property(e => e.CustomerNumber)
+                    .HasColumnName("customer_number")
                     .HasColumnType("numeric(10,0)");
 
-                entity.Property(e => e.Addressline1)
+                entity.Property(e => e.AddressLine1)
                     .IsRequired()
-                    .HasColumnName("addressline1")
+                    .HasColumnName("address_line_1")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Addressline2)
-                    .HasColumnName("addressline2")
+                entity.Property(e => e.AddressLine2)
+                    .HasColumnName("address_line_2")
                     .HasMaxLength(50)
                     .HasDefaultValueSql("NULL::character varying");
 
@@ -63,14 +68,14 @@ namespace EnterpriseCenterApp.Model
                     .HasColumnName("city")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Contactfirstname)
+                entity.Property(e => e.ContactFirstName)
                     .IsRequired()
-                    .HasColumnName("contactfirstname")
+                    .HasColumnName("contact_first_name")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Contactlastname)
+                entity.Property(e => e.ContactLastName)
                     .IsRequired()
-                    .HasColumnName("contactlastname")
+                    .HasColumnName("contact_last_name")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Country)
@@ -78,14 +83,14 @@ namespace EnterpriseCenterApp.Model
                     .HasColumnName("country")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Creditlimit)
-                    .HasColumnName("creditlimit")
+                entity.Property(e => e.CreditLimit)
+                    .HasColumnName("credit_limit")
                     .HasColumnType("numeric(10,2)")
                     .HasDefaultValueSql("NULL::numeric");
 
-                entity.Property(e => e.Customername)
+                entity.Property(e => e.CustomerName)
                     .IsRequired()
-                    .HasColumnName("customername")
+                    .HasColumnName("customer_name")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Phone)
@@ -93,13 +98,13 @@ namespace EnterpriseCenterApp.Model
                     .HasColumnName("phone")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Postalcode)
-                    .HasColumnName("postalcode")
+                entity.Property(e => e.PostalCode)
+                    .HasColumnName("postal_code")
                     .HasMaxLength(15)
                     .HasDefaultValueSql("NULL::character varying");
 
-                entity.Property(e => e.Salesrepemployeenumber)
-                    .HasColumnName("salesrepemployeenumber")
+                entity.Property(e => e.SalesRepEmployeeNumber)
+                    .HasColumnName("sales_rep_employee_number")
                     .HasColumnType("numeric(10,0)")
                     .HasDefaultValueSql("NULL::numeric");
 
@@ -108,28 +113,28 @@ namespace EnterpriseCenterApp.Model
                     .HasMaxLength(50)
                     .HasDefaultValueSql("NULL::character varying");
 
-                entity.HasOne(d => d.SalesrepemployeenumberNavigation)
+                entity.HasOne(d => d.SalesRepEmployeeNumberNavigation)
                     .WithMany(p => p.Customers)
-                    .HasForeignKey(d => d.Salesrepemployeenumber)
+                    .HasForeignKey(d => d.SalesRepEmployeeNumber)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("customers_ibfk_1");
+                    .HasConstraintName("customer_ibfk_1");
             });
 
-            modelBuilder.Entity<Employees>(entity =>
+            modelBuilder.Entity<Employee>(entity =>
             {
-                entity.HasKey(e => e.Employeenumber)
-                    .HasName("employees_pkey");
+                entity.HasKey(e => e.EmployeeNumber)
+                    .HasName("employee_pkey");
 
-                entity.ToTable("employees");
+                entity.ToTable("employee");
 
-                entity.HasIndex(e => e.Officecode)
-                    .HasName("officecode");
+                entity.HasIndex(e => e.OfficeCode)
+                    .HasName("office_code");
 
-                entity.HasIndex(e => e.Reportsto)
-                    .HasName("reportsto");
+                entity.HasIndex(e => e.ReportsTo)
+                    .HasName("reports_to");
 
-                entity.Property(e => e.Employeenumber)
-                    .HasColumnName("employeenumber")
+                entity.Property(e => e.EmployeeNumber)
+                    .HasColumnName("employee_number")
                     .HasColumnType("numeric(10,0)");
 
                 entity.Property(e => e.Email)
@@ -142,61 +147,61 @@ namespace EnterpriseCenterApp.Model
                     .HasColumnName("extension")
                     .HasMaxLength(10);
 
-                entity.Property(e => e.Firstname)
+                entity.Property(e => e.FirstName)
                     .IsRequired()
-                    .HasColumnName("firstname")
+                    .HasColumnName("first_name")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Jobtitle)
+                entity.Property(e => e.JobTitle)
                     .IsRequired()
-                    .HasColumnName("jobtitle")
+                    .HasColumnName("job_title")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Lastname)
+                entity.Property(e => e.LastName)
                     .IsRequired()
-                    .HasColumnName("lastname")
+                    .HasColumnName("last_name")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Officecode)
+                entity.Property(e => e.OfficeCode)
                     .IsRequired()
-                    .HasColumnName("officecode")
+                    .HasColumnName("office_code")
                     .HasMaxLength(10);
 
-                entity.Property(e => e.Reportsto)
-                    .HasColumnName("reportsto")
+                entity.Property(e => e.ReportsTo)
+                    .HasColumnName("reports_to")
                     .HasColumnType("numeric(10,0)")
                     .HasDefaultValueSql("NULL::numeric");
 
-                entity.HasOne(d => d.OfficecodeNavigation)
+                entity.HasOne(d => d.OfficeCodeNavigation)
                     .WithMany(p => p.Employees)
-                    .HasForeignKey(d => d.Officecode)
-                    .HasConstraintName("employees_ibfk_2");
+                    .HasForeignKey(d => d.OfficeCode)
+                    .HasConstraintName("employee_ibfk_2");
 
-                entity.HasOne(d => d.ReportstoNavigation)
-                    .WithMany(p => p.InverseReportstoNavigation)
-                    .HasForeignKey(d => d.Reportsto)
+                entity.HasOne(d => d.ReportsToNavigation)
+                    .WithMany(p => p.InverseReportsToNavigation)
+                    .HasForeignKey(d => d.ReportsTo)
                     .OnDelete(DeleteBehavior.Cascade)
-                    .HasConstraintName("employees_ibfk_1");
+                    .HasConstraintName("employee_ibfk_1");
             });
 
-            modelBuilder.Entity<Offices>(entity =>
+            modelBuilder.Entity<Office>(entity =>
             {
-                entity.HasKey(e => e.Officecode)
-                    .HasName("offices_pkey");
+                entity.HasKey(e => e.OfficeCode)
+                    .HasName("office_pkey");
 
-                entity.ToTable("offices");
+                entity.ToTable("office");
 
-                entity.Property(e => e.Officecode)
-                    .HasColumnName("officecode")
+                entity.Property(e => e.OfficeCode)
+                    .HasColumnName("office_code")
                     .HasMaxLength(10);
 
-                entity.Property(e => e.Addressline1)
+                entity.Property(e => e.AddressLine1)
                     .IsRequired()
-                    .HasColumnName("addressline1")
+                    .HasColumnName("address_line_1")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Addressline2)
-                    .HasColumnName("addressline2")
+                entity.Property(e => e.AddressLine2)
+                    .HasColumnName("address_line_2")
                     .HasMaxLength(50)
                     .HasDefaultValueSql("NULL::character varying");
 
@@ -215,9 +220,9 @@ namespace EnterpriseCenterApp.Model
                     .HasColumnName("phone")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Postalcode)
+                entity.Property(e => e.PostalCode)
                     .IsRequired()
-                    .HasColumnName("postalcode")
+                    .HasColumnName("postal_code")
                     .HasMaxLength(15);
 
                 entity.Property(e => e.State)
@@ -231,77 +236,77 @@ namespace EnterpriseCenterApp.Model
                     .HasMaxLength(10);
             });
 
-            modelBuilder.Entity<Orderdetails>(entity =>
+            modelBuilder.Entity<OrderDetail>(entity =>
             {
-                entity.HasKey(e => new { e.Ordernumber, e.Productcode })
+                entity.HasKey(e => new { e.OrderNumber, e.ProductCode })
                     .HasName("orderdetails_pkey");
 
-                entity.ToTable("orderdetails");
+                entity.ToTable("orderdetail");
 
-                entity.HasIndex(e => e.Productcode)
-                    .HasName("productcode");
+                entity.HasIndex(e => e.ProductCode)
+                    .HasName("product_code");
 
-                entity.Property(e => e.Ordernumber)
-                    .HasColumnName("ordernumber")
+                entity.Property(e => e.OrderNumber)
+                    .HasColumnName("order_number")
                     .HasColumnType("numeric(10,0)");
 
-                entity.Property(e => e.Productcode)
-                    .HasColumnName("productcode")
+                entity.Property(e => e.ProductCode)
+                    .HasColumnName("product_code")
                     .HasMaxLength(15);
 
-                entity.Property(e => e.Orderlinenumber)
-                    .HasColumnName("orderlinenumber")
+                entity.Property(e => e.OrderLineNumber)
+                    .HasColumnName("order_line_number")
                     .HasColumnType("numeric(5,0)");
 
-                entity.Property(e => e.Priceeach)
-                    .HasColumnName("priceeach")
+                entity.Property(e => e.PriceEach)
+                    .HasColumnName("price_each")
                     .HasColumnType("numeric(10,2)");
 
-                entity.Property(e => e.Quantityordered)
-                    .HasColumnName("quantityordered")
+                entity.Property(e => e.QuantityOrdered)
+                    .HasColumnName("quantity_ordered")
                     .HasColumnType("numeric(10,0)");
 
-                entity.HasOne(d => d.OrdernumberNavigation)
-                    .WithMany(p => p.Orderdetails)
-                    .HasForeignKey(d => d.Ordernumber)
-                    .HasConstraintName("orderdetails_ibfk_1");
+                entity.HasOne(d => d.OrderNumberNavigation)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.OrderNumber)
+                    .HasConstraintName("orderdetail_ibfk_1");
 
-                entity.HasOne(d => d.ProductcodeNavigation)
-                    .WithMany(p => p.Orderdetails)
-                    .HasForeignKey(d => d.Productcode)
-                    .HasConstraintName("orderdetails_ibfk_2");
+                entity.HasOne(d => d.ProductCodeNavigation)
+                    .WithMany(p => p.OrderDetails)
+                    .HasForeignKey(d => d.ProductCode)
+                    .HasConstraintName("orderdetail_ibfk_2");
             });
 
-            modelBuilder.Entity<Orders>(entity =>
+            modelBuilder.Entity<Order>(entity =>
             {
-                entity.HasKey(e => e.Ordernumber)
-                    .HasName("orders_pkey");
+                entity.HasKey(e => e.OrderNumber)
+                    .HasName("order_pkey");
 
-                entity.ToTable("orders");
+                entity.ToTable("order");
 
-                entity.HasIndex(e => e.Customernumber)
-                    .HasName("customernumber");
+                entity.HasIndex(e => e.CustomerNumber)
+                    .HasName("customer_number");
 
-                entity.Property(e => e.Ordernumber)
-                    .HasColumnName("ordernumber")
+                entity.Property(e => e.OrderNumber)
+                    .HasColumnName("order_number")
                     .HasColumnType("numeric(10,0)");
 
                 entity.Property(e => e.Comments).HasColumnName("comments");
 
-                entity.Property(e => e.Customernumber)
-                    .HasColumnName("customernumber")
+                entity.Property(e => e.CustomerNumber)
+                    .HasColumnName("customer_number")
                     .HasColumnType("numeric(10,0)");
 
-                entity.Property(e => e.Orderdate)
-                    .HasColumnName("orderdate")
+                entity.Property(e => e.OrderDate)
+                    .HasColumnName("order_date")
                     .HasColumnType("date");
 
-                entity.Property(e => e.Requireddate)
-                    .HasColumnName("requireddate")
+                entity.Property(e => e.RequiredDate)
+                    .HasColumnName("required_date")
                     .HasColumnType("date");
 
-                entity.Property(e => e.Shippeddate)
-                    .HasColumnName("shippeddate")
+                entity.Property(e => e.ShippedDate)
+                    .HasColumnName("shipped_date")
                     .HasColumnType("date");
 
                 entity.Property(e => e.Status)
@@ -309,116 +314,116 @@ namespace EnterpriseCenterApp.Model
                     .HasColumnName("status")
                     .HasMaxLength(15);
 
-                entity.HasOne(d => d.CustomernumberNavigation)
+                entity.HasOne(d => d.CustomerNumberNavigation)
                     .WithMany(p => p.Orders)
-                    .HasForeignKey(d => d.Customernumber)
-                    .HasConstraintName("orders_ibfk_1");
+                    .HasForeignKey(d => d.CustomerNumber)
+                    .HasConstraintName("order_ibfk_1");
             });
 
-            modelBuilder.Entity<Payments>(entity =>
+            modelBuilder.Entity<Payment>(entity =>
             {
-                entity.HasKey(e => new { e.Customernumber, e.Checknumber })
-                    .HasName("payments_pkey");
+                entity.HasKey(e => new { e.CustomerNumber, e.CheckNumber })
+                    .HasName("payment_pkey");
 
-                entity.ToTable("payments");
+                entity.ToTable("payment");
 
-                entity.Property(e => e.Customernumber)
-                    .HasColumnName("customernumber")
+                entity.Property(e => e.CustomerNumber)
+                    .HasColumnName("customer_number")
                     .HasColumnType("numeric(10,0)");
 
-                entity.Property(e => e.Checknumber)
-                    .HasColumnName("checknumber")
+                entity.Property(e => e.CheckNumber)
+                    .HasColumnName("check_number")
                     .HasMaxLength(50);
 
                 entity.Property(e => e.Amount)
                     .HasColumnName("amount")
                     .HasColumnType("numeric(10,2)");
 
-                entity.Property(e => e.Paymentdate)
-                    .HasColumnName("paymentdate")
+                entity.Property(e => e.PaymentDate)
+                    .HasColumnName("payment_date")
                     .HasColumnType("date");
 
-                entity.HasOne(d => d.CustomernumberNavigation)
+                entity.HasOne(d => d.CustomerNumberNavigation)
                     .WithMany(p => p.Payments)
-                    .HasForeignKey(d => d.Customernumber)
-                    .HasConstraintName("payments_ibfk_1");
+                    .HasForeignKey(d => d.CustomerNumber)
+                    .HasConstraintName("payment_ibfk_1");
             });
 
-            modelBuilder.Entity<Productlines>(entity =>
+            modelBuilder.Entity<ProductLine>(entity =>
             {
-                entity.HasKey(e => e.Productline)
-                    .HasName("productlines_pkey");
+                entity.HasKey(e => e.ProductLineName)
+                    .HasName("productline_pkey");
 
-                entity.ToTable("productlines");
+                entity.ToTable("productline");
 
-                entity.Property(e => e.Productline)
-                    .HasColumnName("productline")
+                entity.Property(e => e.ProductLineName)
+                    .HasColumnName("product_line_name")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Htmldescription).HasColumnName("htmldescription");
+                entity.Property(e => e.HtmlDescription).HasColumnName("html_description");
 
                 entity.Property(e => e.Image).HasColumnName("image");
 
-                entity.Property(e => e.Textdescription)
-                    .HasColumnName("textdescription")
+                entity.Property(e => e.TextDescription)
+                    .HasColumnName("text_description")
                     .HasMaxLength(4000)
                     .HasDefaultValueSql("NULL::character varying");
             });
 
-            modelBuilder.Entity<Products>(entity =>
+            modelBuilder.Entity<Product>(entity =>
             {
-                entity.HasKey(e => e.Productcode)
-                    .HasName("products_pkey");
+                entity.HasKey(e => e.ProductCode)
+                    .HasName("product_pkey");
 
-                entity.ToTable("products");
+                entity.ToTable("product");
 
-                entity.HasIndex(e => e.Productline)
-                    .HasName("productline");
+                entity.HasIndex(e => e.ProductLineName)
+                    .HasName("product_line");
 
-                entity.Property(e => e.Productcode)
-                    .HasColumnName("productcode")
+                entity.Property(e => e.ProductCode)
+                    .HasColumnName("product_code")
                     .HasMaxLength(15);
 
-                entity.Property(e => e.Buyprice)
-                    .HasColumnName("buyprice")
+                entity.Property(e => e.BuyPrice)
+                    .HasColumnName("buy_price")
                     .HasColumnType("numeric(10,2)");
 
                 entity.Property(e => e.Msrp)
                     .HasColumnName("msrp")
                     .HasColumnType("numeric(10,2)");
 
-                entity.Property(e => e.Productdescription)
+                entity.Property(e => e.ProductDescription)
                     .IsRequired()
-                    .HasColumnName("productdescription");
+                    .HasColumnName("product_description");
 
-                entity.Property(e => e.Productline)
+                entity.Property(e => e.ProductLineName)
                     .IsRequired()
-                    .HasColumnName("productline")
+                    .HasColumnName("product_line_name")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Productname)
+                entity.Property(e => e.ProductName)
                     .IsRequired()
-                    .HasColumnName("productname")
+                    .HasColumnName("product_name")
                     .HasMaxLength(70);
 
-                entity.Property(e => e.Productscale)
+                entity.Property(e => e.ProductScale)
                     .IsRequired()
-                    .HasColumnName("productscale")
+                    .HasColumnName("product_scale")
                     .HasMaxLength(10);
 
-                entity.Property(e => e.Productvendor)
+                entity.Property(e => e.ProductVendor)
                     .IsRequired()
-                    .HasColumnName("productvendor")
+                    .HasColumnName("product_vendor")
                     .HasMaxLength(50);
 
-                entity.Property(e => e.Quantityinstock)
-                    .HasColumnName("quantityinstock")
+                entity.Property(e => e.QuantityInStock)
+                    .HasColumnName("quantity_in_stock")
                     .HasColumnType("numeric(6,0)");
 
                 entity.HasOne(d => d.ProductlineNavigation)
                     .WithMany(p => p.Products)
-                    .HasForeignKey(d => d.Productline)
-                    .HasConstraintName("products_ibfk_1");
+                    .HasForeignKey(d => d.ProductLineName)
+                    .HasConstraintName("product_ibfk_1");
             });
 
             OnModelCreatingPartial(modelBuilder);

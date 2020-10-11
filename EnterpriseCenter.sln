@@ -5,14 +5,13 @@ VisualStudioVersion = 16.0.30317.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseCenterApp", "EnterpriseCenterApp\EnterpriseCenterApp.csproj", "{A9DAC2DF-B0D3-4041-BCD0-C5F9D2EA5DF3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Db", "Db", "{26C97494-42FA-401F-A93A-782272FA105B}"
-	ProjectSection(SolutionItems) = preProject
-		Db\1_CreateDb.sql = Db\1_CreateDb.sql
-		Db\2_Schema.sql = Db\2_Schema.sql
-		Db\3_Data.sql = Db\3_Data.sql
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApiTester", "WebApiTester\WebApiTester.csproj", "{A5559A6E-0910-46C7-90DD-45A32919C31A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B53E85D4-0AC4-417A-ACB5-16A12C2C03E4}"
+	ProjectSection(SolutionItems) = preProject
+		CreateDb.sql = CreateDb.sql
+		Data.sql = Data.sql
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

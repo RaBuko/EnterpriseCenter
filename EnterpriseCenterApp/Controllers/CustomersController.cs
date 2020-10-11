@@ -8,89 +8,60 @@ using System.Threading.Tasks;
 
 namespace EnterpriseCenterApp.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class CustomersController : Controller
     {
-        protected EnterpriseCenterContext EnterpriseCenterContext;
+        protected EnterpriseCenterContext ctx;
 
         public CustomersController(EnterpriseCenterContext enterpriseCenterContext)
         {
-            EnterpriseCenterContext = enterpriseCenterContext;
+            ctx = enterpriseCenterContext;
         }
 
-        // GET: CustomersController
+        [HttpGet]
         public ActionResult Index()
-        {
-            return View();
+        {        
+            return Ok(ctx.Customers.ToList());
         }
 
-        // GET: CustomersController/Details/5
+        [HttpGet("{customerNumber}")]
         public ActionResult Details(decimal customerNumber)
         {
-            var customer = EnterpriseCenterContext.Customers.FirstOrDefault(c => c.Customernumber == customerNumber);
-            return View(customer);
+            var customer = ctx.Customers.FirstOrDefault(c => c.CustomerNumber == customerNumber);
+            return Ok(customer);
         }
 
-        // GET: CustomersController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: CustomersController/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Upsert([FromBody] Customer customer)
         {
-            try
+            var customerFound = ctx.Customers.FirstOrDefault(x => x.CustomerNumber == customer.CustomerNumber);
+            if (customerFound == null)
             {
-                return RedirectToAction(nameof(Index));
+                ctx.Customers.Add(customer);
             }
-            catch
+            else
             {
-                return View();
+                ctx.Customers.Update(customer);
             }
+
+            ctx.SaveChanges();
+            return Ok(customer);
         }
 
-        // GET: CustomersController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpDelete]
+        [Route("{customerNumber}")]
+        public ActionResult Delete(decimal customerNumber)
         {
-            return View();
-        }
+            var customer = ctx.Customers.FirstOrDefault(x => x.CustomerNumber == customerNumber);
+            if (customer == null)
+            {
+                return NotFound();
+            }
 
-        // POST: CustomersController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: CustomersController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: CustomersController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ctx.Customers.Remove(customer);
+            ctx.SaveChanges();
+            return Ok();
         }
     }
 }

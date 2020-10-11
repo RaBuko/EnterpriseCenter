@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnterpriseCenterApp.Algos
 {
@@ -80,6 +79,39 @@ namespace EnterpriseCenterApp.Algos
             }
 
             return true;
+        }
+
+        public void AdjustSquareToBeMagic()
+        {
+            var (horzSums, vertSums) = GetSums();
+            
+            var mean = Math.Ceiling((double)(horzSums.Sum() / horzSums.Count + vertSums.Sum() / vertSums.Count()));
+            Console.WriteLine(mean);
+            Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Calculates sums in magic square, both horizontally and vertically
+        /// </summary>
+        /// <returns>First array are horizontal sums, second array are vertical ones</returns>
+        public (List<int> horzSums, List<int> vertSums) GetSums()
+        {
+            var verticalSums = new List<int>();
+            var horizontalSums = new List<int>();
+
+            for (int i = 0; i < Size; i++)
+            {
+                int sumH = 0, sumV = 0;
+                for (int j = 0; j < Size; j++)
+                {
+                    sumH += data[i, j];
+                    sumV += data[j, i];
+                }
+                horizontalSums.Add(sumH);
+                verticalSums.Add(sumV);
+            }
+
+            return (horizontalSums, verticalSums);
         }
 
         public int this[int x, int y]

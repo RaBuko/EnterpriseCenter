@@ -18,5 +18,34 @@ namespace WebApiTester
 
             Assert.True(magicSquare.IsMagic());
         }
+
+        [Fact]
+        public void TestCheckIfMagicFalse()
+        {
+            MagicSquare magicSquare = new MagicSquare(
+                8, 4, 8,
+                1, 7, 4,
+                6, 7, 2);
+
+            Assert.False(magicSquare.IsMagic());
+        }
+
+        [Fact]
+        public void TestMagicSquareSums()
+        {
+            MagicSquare magicSquare = new MagicSquare(
+                1, 2, 3,
+                4, 5, 6,
+                7, 8, 9);
+
+            var (horzSums, vertSums) = magicSquare.GetSums();
+
+            Assert.Equal(horzSums, new List<int>() { 6, 15, 24 });
+            Assert.Equal(vertSums, new List<int>() { 12, 15, 18 });
+
+            magicSquare.AdjustSquareToBeMagic();
+
+            Assert.True(magicSquare.IsMagic());
+        }
     }
 }

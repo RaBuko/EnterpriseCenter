@@ -7,6 +7,9 @@ namespace EnterpriseCenterApp.Algos
 {
     public class AlgosService
     {
+        public AlgosService()
+        {
 
+        }
     }
 }
