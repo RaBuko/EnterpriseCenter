@@ -29,7 +29,7 @@ namespace EnterpriseCenterApp.Controllers
         public ActionResult Details(decimal customerNumber)
         {
             var customer = ctx.Customers.FirstOrDefault(c => c.CustomerNumber == customerNumber);
-            return Ok(customer);
+            return customer == null ? NotFound(customer) : Ok(customer);
         }
 
         [HttpPost]

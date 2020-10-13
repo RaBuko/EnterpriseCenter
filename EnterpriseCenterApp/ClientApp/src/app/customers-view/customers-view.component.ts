@@ -19,3 +19,7 @@ export class CustomersViewComponent implements OnInit {
 
   }
 }
+
+export class Customer {
+  constructor() {}
+}
