@@ -6,8 +6,7 @@ This repository is an example of how can a system supporting a company look like
 
 ### Used technologies
 
-* .NET Core 3.1 (Web Api)
-* Angular 10 (Frontend)
+* ASP.NET Core MVC
 * PostgreSQL (Database)
 
 ### Topics
@@ -16,4 +15,6 @@ This repository is an example of how can a system supporting a company look like
     * Code-first approach
     * Multiple tables
     * Migration from code to database
+* Razor Pages
+* MVC Approach
 

@@ -1,0 +1,41 @@
+﻿@model IEnumerable<Customer>
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "CustomersIndex";
+
+}
+
+<h2>Customers</h2>
+
+<p>Customers found on the server:</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CustomerName)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(i => item.CustomerNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(i => item.CustomerName)
+                </td>
+                <td>
+                    <a asp-action="Details" asp-route-customerNumber="@item.CustomerNumber.ToString()">Details</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,16 @@
+﻿@model Customer
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    ViewData["Title"] = "Customer nr " + Model.CustomerNumber;
+}
+
+<h1>Customer nr @Model.CustomerNumber</h1>
+<div>
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </dt>
+    </dl>
+</div>
