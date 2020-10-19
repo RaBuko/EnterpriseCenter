@@ -27,12 +27,14 @@ namespace EnterpriseCenterWeb.Controllers
             return customer == null ? NotFound() : View(customer);
         }
 
-        public ActionResult Upsert([FromBody] Customer customer)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upsert([Bind("CustomerNumber,CustomerName,CustomerLastName, ContactFirstName,Phone, AddressLine1")] Customer customer)
         {
-            var customerFound = ctx.Customers.FirstOrDefault(x => x.CustomerNumber == customer.CustomerNumber);
+            var customerFound = await ctx.Customers.FirstOrDefaultAsync(x => x.CustomerNumber == customer.CustomerNumber);
             if (customerFound == null)
             {
-                ctx.Customers.Add(customer);
+                await ctx.Customers.AddAsync(customer);
             }
             else
             {

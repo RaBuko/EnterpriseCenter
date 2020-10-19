@@ -10,7 +10,24 @@
 <div>
     <dl class="row">
         <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CustomerNumber)
+        </dt>
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CustomerName)
         </dt>
+        <dt>
+            @Html.DisplayNameFor(model => model.ContactFirstName)
+        </dt>        
+    </dl>
+    <dl>
+        <dd>
+            @Model.CustomerNumber
+        </dd>
+        <dd>
+            @Model.CustomerName
+        </dd>
+        <dd>
+            @Model.ContactFirstName
+        </dd>
     </dl>
 </div>
