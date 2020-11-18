@@ -1,4 +1,5 @@
 ﻿using EnterpriseCenterWeb.Models;
+using EnterpriseCenterWeb.Services.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
@@ -9,15 +10,17 @@ namespace EnterpriseCenterWeb.Controllers
     public class CustomersController : Controller
     {
         protected EnterpriseCenterContext ctx;
+        protected ILogService logService;
 
-        public CustomersController(EnterpriseCenterContext enterpriseCenterContext)
+        public CustomersController(EnterpriseCenterContext enterpriseCenterContext, ILogService inLogService)
         {
             ctx = enterpriseCenterContext;
+            logService = inLogService;
         }
 
         public IActionResult Index()
         {
-            var customers = ctx.Customers.ToList();
+            var customers = ctx.Customers.Take(10).ToList();
             return View(customers);
         }
         
@@ -45,9 +48,9 @@ namespace EnterpriseCenterWeb.Controllers
             return Ok(customer);
         }
 
-        public ActionResult Delete(decimal customerNumber)
+        public async Task<IActionResult> Delete(decimal customerNumber)
         {
-            var customer = ctx.Customers.FirstOrDefault(x => x.CustomerNumber == customerNumber);
+            var customer = await ctx.Customers.FirstOrDefaultAsync(x => x.CustomerNumber == customerNumber);
             if (customer == null)
             {
                 return NotFound();
