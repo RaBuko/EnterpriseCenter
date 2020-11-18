@@ -17,5 +17,7 @@ namespace EnterpriseCenterWeb.Services.Logging
     public interface ILogService
     {
         public LogResult Log(object data, Guid guid, string header = "");
+
+        public LogResult LogException(Exception ex, Guid guid, string header = "");
     }
 }

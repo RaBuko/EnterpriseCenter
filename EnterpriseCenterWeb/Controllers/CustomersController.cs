@@ -18,12 +18,25 @@ namespace EnterpriseCenterWeb.Controllers
             logService = inLogService;
         }
 
-        public IActionResult Index()
+        [HttpGet]
+        public async Task<IActionResult> Index(string searchString)
         {
-            var customers = ctx.Customers.Take(10).ToList();
-            return View(customers);
+            var customers = from x in ctx.Customers
+                            select x;
+
+            if (!string.IsNullOrWhiteSpace(searchString) && searchString.Length > 2)
+            {
+                customers = customers.Where(x => (x.CustomerName + x.ContactFirstName + x.ContactLastName).Contains(searchString));
+            }
+            else
+            {
+                customers = customers.Take(10);
+            }
+
+            return View(await customers.ToListAsync());
         }
         
+        [HttpGet]
         public async Task<IActionResult> Details(decimal customerNumber)
         {
             var customer = await ctx.Customers.FirstOrDefaultAsync(c => c.CustomerNumber == customerNumber);
@@ -48,6 +61,7 @@ namespace EnterpriseCenterWeb.Controllers
             return Ok(customer);
         }
 
+        [HttpDelete]
         public async Task<IActionResult> Delete(decimal customerNumber)
         {
             var customer = await ctx.Customers.FirstOrDefaultAsync(x => x.CustomerNumber == customerNumber);

@@ -47,7 +47,7 @@ namespace EnterpriseCenterWeb.Models
                 entity.ToTable("customer");
 
                 entity.HasIndex(e => e.SalesRepEmployeeNumber)
-                    .HasName("sales_rep_employee_number");
+                    .HasDatabaseName("sales_rep_employee_number");
 
                 entity.Property(e => e.CustomerNumber)
                     .HasColumnName("customer_number")
@@ -128,10 +128,10 @@ namespace EnterpriseCenterWeb.Models
                 entity.ToTable("employee");
 
                 entity.HasIndex(e => e.OfficeCode)
-                    .HasName("office_code");
+                    .HasDatabaseName("office_code");
 
                 entity.HasIndex(e => e.ReportsTo)
-                    .HasName("reports_to");
+                    .HasDatabaseName("reports_to");
 
                 entity.Property(e => e.EmployeeNumber)
                     .HasColumnName("employee_number")
@@ -244,7 +244,7 @@ namespace EnterpriseCenterWeb.Models
                 entity.ToTable("orderdetail");
 
                 entity.HasIndex(e => e.ProductCode)
-                    .HasName("product_code");
+                    .HasDatabaseName("product_code");
 
                 entity.Property(e => e.OrderNumber)
                     .HasColumnName("order_number")
@@ -285,7 +285,7 @@ namespace EnterpriseCenterWeb.Models
                 entity.ToTable("order");
 
                 entity.HasIndex(e => e.CustomerNumber)
-                    .HasName("customer_number");
+                    .HasDatabaseName("customer_number");
 
                 entity.Property(e => e.OrderNumber)
                     .HasColumnName("order_number")
@@ -378,7 +378,7 @@ namespace EnterpriseCenterWeb.Models
                 entity.ToTable("product");
 
                 entity.HasIndex(e => e.ProductLineName)
-                    .HasName("product_line");
+                    .HasDatabaseName("product_line");
 
                 entity.Property(e => e.ProductCode)
                     .HasColumnName("product_code")

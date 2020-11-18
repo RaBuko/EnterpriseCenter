@@ -4,10 +4,16 @@
 *@
 @{
     ViewData["Title"] = "CustomersIndex";
-
 }
 
 <h2>Customers</h2>
+
+<form asp-controller="Customers" asp-action="Index" method="get">
+    <p>
+        Search: <input type="text" name="SearchString"/>
+        <input type="submit" value="Filter"/>
+    </p>
+</form>
 
 <p>Customers found on the server:</p>
 
@@ -20,22 +26,39 @@
             <th>
                 @Html.DisplayNameFor(model => model.CustomerName)
             </th>
+            <th>
+                Address
+            </th>
+            <th>
+                Contact
+            </th>
+            <th>
+                Action
+            </th>
         </tr>
     </thead>
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(i => item.CustomerNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(i => item.CustomerName)
-                </td>
-                <td>
-                    <a asp-action="Details" asp-route-customerNumber="@item.CustomerNumber.ToString()">Details</a>
-                </td>
-            </tr>
+            var address = $"{item.AddressLine1} {item.AddressLine2}, {item.PostalCode}, {item.City}, {item.Country}";
+            var contactName = $"{item.ContactFirstName} {item.ContactLastName}";
+        <tr>
+            <td>
+                @Html.DisplayFor(i => item.CustomerNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(i => item.CustomerName)
+            </td>
+            <td>
+                @address
+            </td>
+            <td>
+                @contactName
+            </td>
+            <td>
+                <a asp-action="Details" asp-route-customerNumber="@item.CustomerNumber.ToString()">Details</a>
+            </td>
+        </tr>
         }
     </tbody>
 </table>

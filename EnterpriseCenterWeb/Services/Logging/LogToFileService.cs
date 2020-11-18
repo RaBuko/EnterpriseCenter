@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -8,16 +9,16 @@ namespace EnterpriseCenterWeb.Services.Logging
 {
     public class LogToFileService : ILogService
     {
-        public static string path = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+        public static string DirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
 
         public LogToFileService(string directory)
         {
             if (!string.IsNullOrWhiteSpace(directory) || !Uri.IsWellFormedUriString(directory, UriKind.RelativeOrAbsolute))
             {
-                path = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
+                DirectoryPath = Path.Combine(Directory.GetCurrentDirectory(), "Logs");
             }
 
-            path = Directory.CreateDirectory(directory).FullName;
+            DirectoryPath = Directory.CreateDirectory(directory).FullName;
         }
 
         public LogResult Log(object data, Guid guid, string header = "")
@@ -28,6 +29,11 @@ namespace EnterpriseCenterWeb.Services.Logging
                 Response = true,
                 Succeded = true
             };
+        }
+
+        public LogResult LogException(Exception ex, Guid guid, string header = "")
+        {
+            throw new NotImplementedException();
         }
     }
 }
