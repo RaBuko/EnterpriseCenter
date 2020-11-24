@@ -30,7 +30,7 @@ namespace EnterpriseCenterWeb
             services.AddDbContext<EnterpriseCenterContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("EnterpriseCenterDatabase")));
 
-            services.AddSingleton(typeof(ILogService), new LogToFileService(Directory.GetCurrentDirectory()));
+            services.AddSingleton(typeof(ILogService), new NLogService("filetarget"));
 
             services.AddSwaggerGen(c =>
             {

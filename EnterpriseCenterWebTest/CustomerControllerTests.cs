@@ -1,30 +1,37 @@
-using EnterpriseCenterWeb.Controllers;
+using EnterpriseCenterWeb;
 using EnterpriseCenterWeb.Models;
-using EnterpriseCenterWeb.Services.Logging;
+using EnterpriseCenterWebIntegrationTests;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.IO;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using System.Net.Http;
 using Xunit;
 
 namespace EnterpriseCenterWebTest
 {
     [Collection("Customer Controller Tests")]
-    public class CustomerControllerTests
+    public class CustomerControllerTests : IClassFixture<EnterpriseCenterWebFactory<Startup>>
     {
+        private readonly EnterpriseCenterWebFactory<Startup> _factory;
+        private readonly HttpClient _client;
 
-
-        CustomersController Controller { get; set; }
-
-        public CustomerControllerTests()
+        public CustomerControllerTests(EnterpriseCenterWebFactory<Startup> factory)
         {
-            Controller = new CustomersController(new LogToFileService(Directory.GetCurrentDirectory()));
+            _factory = factory;
+            _client = factory.CreateClient(new Microsoft.AspNetCore.Mvc.Testing.WebApplicationFactoryClientOptions()
+            {
+                AllowAutoRedirect = false
+            });
         }
 
         [Fact]
         public async void Get_customers()
         {
-            var actionResult = await Controller.Index("");
+            //Arrange+
+            var defaultPage = _client.GetAsync("/customers");
+            var content = await HtmlHelpers.GetDocumentAsync(defaultPage);
+
+            //Acr
 
             //Assert
             var viewResult = Assert.IsType<ViewResult>(actionResult);
