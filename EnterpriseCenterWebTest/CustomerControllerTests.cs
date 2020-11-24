@@ -28,14 +28,7 @@ namespace EnterpriseCenterWebTest
         public async void Get_customers()
         {
             //Arrange+
-            var defaultPage = _client.GetAsync("/customers");
-            var content = await HtmlHelpers.GetDocumentAsync(defaultPage);
-
-            //Acr
-
-            //Assert
-            var viewResult = Assert.IsType<ViewResult>(actionResult);
-            Assert.IsAssignableFrom<Customer>(viewResult.ViewData.Model);
+            var defaultPage = await _client.GetAsync("/customers");
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using EnterpriseCenterWeb.Models;
+using NLog.Time;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,11 @@ namespace EnterpriseCenterWebIntegrationTests
     {
         public static void InitializeDbForTests(EnterpriseCenterContext ctx)
         {
+            ctx.Database.EnsureCreated();
+
+
+
+
 
         }
 

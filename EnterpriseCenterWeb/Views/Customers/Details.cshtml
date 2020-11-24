@@ -3,31 +3,57 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-    ViewData["Title"] = "Customer nr " + Model.CustomerNumber;
+    ViewData["Title"] = "Customer " + Model.CustomerNumber;
 }
 
-<h1>Customer nr @Model.CustomerNumber</h1>
+<h1>Customer @Model.CustomerNumber</h1>
 <div>
     <dl class="row">
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.CustomerNumber)
-        </dt>
-        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.CustomerName)
         </dt>
-        <dt>
-            @Html.DisplayNameFor(model => model.ContactFirstName)
-        </dt>        
-    </dl>
-    <dl>
-        <dd>
-            @Model.CustomerNumber
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CustomerName)
         </dd>
-        <dd>
-            @Model.CustomerName
+        <dt class="col-sm-2">
+            Address
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.AddressLine1 + " " + model.AddressLine2)
         </dd>
-        <dd>
-            @Model.ContactFirstName
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Orders)
+        </dt>
+        <dd class="col-sm-10">
+            <table class="table">
+                <tr>
+                    <th>Order Number</th>
+                    <th>Order Date</th>
+                    <th>Shipped Date</th>
+                    <th>Required Date</th>
+                    <th>Status</th>
+                </tr>
+                @foreach (var item in Model.Orders)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderNumber)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.OrderDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ShippedDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.RequiredDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Status)
+                        </td>
+                    </tr>
+                }
+            </table>
         </dd>
     </dl>
 </div>

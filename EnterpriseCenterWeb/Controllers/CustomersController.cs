@@ -39,13 +39,23 @@ namespace EnterpriseCenterWeb.Controllers
         [HttpGet]
         public async Task<IActionResult> Details(decimal customerNumber)
         {
-            var customer = await ctx.Customers.FirstOrDefaultAsync(c => c.CustomerNumber == customerNumber);
+            var customer = await ctx.Customers
+                .Include(o => o.Orders)
+                    .ThenInclude(od => od.OrderDetails)
+                .FirstOrDefaultAsync(c => c.CustomerNumber == customerNumber);
+                
             return customer == null ? NotFound() : View(customer);
+        }
+
+        [HttpGet]
+        public IActionResult Create()
+        {
+            return View("Create");
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Upsert([Bind("CustomerNumber,CustomerName,CustomerLastName, ContactFirstName,Phone, AddressLine1")] Customer customer)
+        public async Task<IActionResult> Create([Bind("CustomerNumber,CustomerName,CustomerLastName,ContactFirstName,Phone,AddressLine1,City,Country")] Customer customer)
         {
             var customerFound = await ctx.Customers.FirstOrDefaultAsync(x => x.CustomerNumber == customer.CustomerNumber);
             if (customerFound == null)

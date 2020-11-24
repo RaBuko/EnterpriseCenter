@@ -37,7 +37,7 @@ namespace EnterpriseCenterWebIntegrationTests
 
                     try
                     {
-                        Utilities.InitDb(db);
+                        InitDb.InitializeDbForTests(db);
                     }
                     catch (Exception ex)
                     {
