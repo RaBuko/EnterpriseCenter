@@ -1,6 +1,5 @@
 using EnterpriseCenterWeb.Algos;
 using EnterpriseCenterWeb.Models;
-using EnterpriseCenterWeb.Services.Logging;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -29,8 +28,6 @@ namespace EnterpriseCenterWeb
 
             services.AddDbContext<EnterpriseCenterContext>(options =>
                 options.UseNpgsql(Configuration.GetConnectionString("EnterpriseCenterDatabase")));
-
-            services.AddSingleton(typeof(ILogService), new NLogService("filetarget"));
 
             services.AddSwaggerGen(c =>
             {

@@ -1,7 +1,7 @@
 ﻿using EnterpriseCenterWeb.Models;
-using EnterpriseCenterWeb.Services.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,32 +10,34 @@ namespace EnterpriseCenterWeb.Controllers
     public class CustomersController : Controller
     {
         protected EnterpriseCenterContext ctx;
-        protected ILogService logService;
+        protected ILogger<CustomersController> _logger;
 
-        public CustomersController(EnterpriseCenterContext enterpriseCenterContext, ILogService inLogService)
+        public CustomersController(EnterpriseCenterContext enterpriseCenterContext, ILogger<CustomersController> logger)
         {
             ctx = enterpriseCenterContext;
-            logService = inLogService;
+            _logger = logger;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index(string searchString)
         {
+            _logger.LogInformation("Index with searchString = {searchString}", searchString);
             var customers = from x in ctx.Customers
                             select x;
 
             if (!string.IsNullOrWhiteSpace(searchString) && searchString.Length > 2)
             {
-                customers = customers.Where(x => (x.CustomerName + x.ContactFirstName + x.ContactLastName).Contains(searchString));
+                customers = customers.Where(x => (x.CustomerName + x.ContactFirstName + x.ContactLastName).ToLower().Contains(searchString.ToLower()));
             }
             else
             {
                 customers = customers.Take(10);
             }
 
+
             return View(await customers.ToListAsync());
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> Details(decimal customerNumber)
         {
@@ -43,7 +45,9 @@ namespace EnterpriseCenterWeb.Controllers
                 .Include(o => o.Orders)
                     .ThenInclude(od => od.OrderDetails)
                 .FirstOrDefaultAsync(c => c.CustomerNumber == customerNumber);
-                
+
+            _logger.LogInformation("Details, customerNumber: {customerNumber}", customerNumber);
+
             return customer == null ? NotFound() : View(customer);
         }
 
