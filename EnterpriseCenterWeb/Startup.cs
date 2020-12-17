@@ -2,6 +2,7 @@ using EnterpriseCenterWeb.Algos;
 using EnterpriseCenterWeb.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,14 @@ using Microsoft.Extensions.Hosting;
 using System;
 using System.IO;
 using System.Reflection;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using System.Net;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using System.Threading.Tasks;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Text;
 
 namespace EnterpriseCenterWeb
 {
@@ -26,8 +35,35 @@ namespace EnterpriseCenterWeb
         {
             services.AddControllersWithViews();
 
-            services.AddDbContext<EnterpriseCenterContext>(options =>
-                options.UseNpgsql(Configuration.GetConnectionString("EnterpriseCenterDatabase")));
+            services
+                .AddEntityFrameworkNpgsql()
+                .AddDbContext<EnterpriseCenterContext>(options =>
+                    options.UseNpgsql(Configuration.GetConnectionString("EnterpriseCenterDatabase")))
+                .AddDbContext<UserDbContext>(options => 
+                    options.UseNpgsql(Configuration.GetConnectionString("EnterpriseCenterDatabase")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>((options) => 
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireDigit = true;
+            })
+            .AddEntityFrameworkStores<UserDbContext>();
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Events.OnRedirectToLogin = ctx =>
+                {
+                    ctx.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
+            });
+                
+
+            services.Configure<JWTSettings>(Configuration.GetSection("JWTSettings"));
 
             services.AddSwaggerGen(c =>
             {
@@ -48,6 +84,30 @@ namespace EnterpriseCenterWeb
                 var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentFile);
                 //c.IncludeXmlComments(xmlCommentsFullPath);
             });
+
+            services.AddMvc();
+
+                       // secretKey contains a secret passphrase only your server knows
+            var secretKey = Configuration.GetSection("JWTSettings:SecretKey").Value;
+            var issuer = Configuration.GetSection("JWTSettings:Issuer").Value;
+            var audience = Configuration.GetSection("JWTSettings:Audience").Value;
+            var signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(secretKey));
+            var tokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = signingKey,
+
+                // Validate the JWT Issuer (iss) claim
+                ValidateIssuer = true,
+                ValidIssuer = issuer,
+
+                // Validate the JWT Audience (aud) claim
+                ValidateAudience = true,
+                ValidAudience = audience
+            };
+
+            services.AddAuthentication()
+                .AddJwtBearer(options => options.TokenValidationParameters = tokenValidationParameters);
 
             services.AddTransient<AlgosService>();
         }

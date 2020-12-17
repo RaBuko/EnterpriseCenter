@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30317.65
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B53E85D4-0AC4-417A-ACB5-16A12C2C03E4}"
 	ProjectSection(SolutionItems) = preProject
-		CreateDb.sql = CreateDb.sql
-		Data.sql = Data.sql
 		readme.md = readme.md
 	EndProjectSection
 EndProject
@@ -14,7 +12,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseCenterWeb", "Ente
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseCenterWebIntegrationTests", "EnterpriseCenterWebTest\EnterpriseCenterWebIntegrationTests.csproj", "{6EE08304-DC65-469C-8E48-F97B61F6DF71}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseCenterWebUnitTests", "EnterpriseCenterUnitTests\EnterpriseCenterWebUnitTests.csproj", "{00A50756-7B82-465D-9CCE-F1885429EEF0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseCenterWebUnitTests", "EnterpriseCenterUnitTests\EnterpriseCenterWebUnitTests.csproj", "{00A50756-7B82-465D-9CCE-F1885429EEF0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DbScripts", "DbScripts", "{97018E2C-90D0-45FF-8A86-2B72EB5F2E4B}"
+	ProjectSection(SolutionItems) = preProject
+		CreateDb.sql = CreateDb.sql
+		Data.sql = Data.sql
+		IdentityTables.sql = IdentityTables.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Commands", "Commands", "{B62B3781-A1D0-477B-9BA3-C61A3B783C9E}"
+	ProjectSection(SolutionItems) = preProject
+		Migration.bat = Migration.bat
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +47,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{97018E2C-90D0-45FF-8A86-2B72EB5F2E4B} = {B53E85D4-0AC4-417A-ACB5-16A12C2C03E4}
+		{B62B3781-A1D0-477B-9BA3-C61A3B783C9E} = {B53E85D4-0AC4-417A-ACB5-16A12C2C03E4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2B6C1454-E553-4239-89C2-D50553888121}

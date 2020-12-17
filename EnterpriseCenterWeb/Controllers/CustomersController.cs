@@ -1,4 +1,5 @@
 ﻿using EnterpriseCenterWeb.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -7,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EnterpriseCenterWeb.Controllers
 {
+    [Authorize]
     public class CustomersController : Controller
     {
         protected EnterpriseCenterContext ctx;
