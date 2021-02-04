@@ -13,28 +13,35 @@ using Microsoft.Extensions.Logging;
 
 namespace EnterpriseCenterWeb.Controllers
 {
-
-    [Route("api/[controller]")]
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly JWTSettings _options;
+        protected ILogger<AccountController> _logger;
 
         public AccountController(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IOptions<JWTSettings> optionsAccessor)
+            IOptions<JWTSettings> optionsAccessor,
+            ILogger<AccountController> logger)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _options = optionsAccessor.Value;
+            _logger = logger;
+        }
+
+        [HttpGet]
+        public IActionResult Register()
+        {
+            return View();
         }
 
         [HttpPost]
         public async Task<IActionResult> Register([FromBody] Credentials Credentials)
         {
-            //_logger.LogInformation("Register for mail: {Email}", Credentials.Email);
+            _logger.LogInformation("Register for mail: {Email}", Credentials.Email);
             if (ModelState.IsValid)
             {
                 var user = new IdentityUser { UserName = Credentials.Email, Email = Credentials.Email };
@@ -54,9 +61,16 @@ namespace EnterpriseCenterWeb.Controllers
             return Error("Unexpected error");
         }
 
+        [HttpGet]
+        public IActionResult SignIn()
+        {
+            return View();
+        }
+
         [HttpPost("sign-in")]
         public async Task<IActionResult> SignIn([FromBody] Credentials Credentials)
         {
+            _logger.LogInformation("SignIn for mail: {Email}", Credentials.Email);
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(Credentials.Email, Credentials.Password, false, false);
